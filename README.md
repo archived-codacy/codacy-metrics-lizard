@@ -1,6 +1,7 @@
 # codacy-metrics-lizard
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9e4c1f4395ac4ffa962793398aea39fe)](https://www.codacy.com/app/Codacy/codacy-metrics-lizard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-metrics-lizard&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/9e4c1f4395ac4ffa962793398aea39fe)](https://www.codacy.com/app/Codacy/codacy-metrics-lizard?utm_source=github.com&utm_medium=referral&utm_content=codacy/codacy-metrics-lizard&utm_campaign=Badge_Coverage)
 [![CircleCI](https://circleci.com/gh/codacy/codacy-metrics-lizard.svg?style=svg)](https://circleci.com/gh/codacy/codacy-metrics-lizard)
 [![Docker Version](https://images.microbadger.com/badges/version/codacy/codacy-metrics-lizard.svg)](https://microbadger.com/images/codacy/codacy-metrics-lizard "Get your own version badge on microbadger.com")
 
