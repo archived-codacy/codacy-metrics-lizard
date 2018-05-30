@@ -154,6 +154,9 @@ jobs:
       - *setup_dependencies_key
       - *restore_dependencies
       - *restore_build
+      - run:
+          name: Publish local docker
+          command: ./scripts/publish.sh 0.1.$CIRCLE_BUILD_NUM
       - deploy:
           name: Push docker to DockerHub
           command: |
