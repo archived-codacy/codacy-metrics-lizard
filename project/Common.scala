@@ -26,10 +26,20 @@ object Common {
         List(
           Cmd("RUN", "adduser -u 2004 -D docker"),
           cmd,
-          Cmd("RUN", s"""sudo python3 -m pip install -I -U --no-cache-dir lizard==$lizardVersion"""))
+          Cmd(
+            "RUN",
+            s"""apk update &&
+               |apk add bash curl python3 &&
+               |python3 -m ensurepip &&
+               |python3 -m pip install -I -U --no-cache-dir lizard==$lizardVersion &&
+               |rm -rf /tmp/* &&
+               |rm -rf /var/cache/apk/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
+          )
+        )
 
       case other => List(other)
-    })
+    }
+  )
 
   val compilerFlags: Seq[String] = Seq(
     "-deprecation", // Emit warning and location for usages of deprecated APIs.
