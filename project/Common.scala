@@ -26,9 +26,7 @@ object Common {
         List(
           Cmd("RUN", "adduser -u 2004 -D docker"),
           cmd,
-          Cmd(
-            "RUN",
-            s"""sudo python3 -m pip install -I -U --no-cache-dir lizard==$lizardVersion"""))
+          Cmd("RUN", s"""sudo python3 -m pip install -I -U --no-cache-dir lizard==$lizardVersion"""))
 
       case other => List(other)
     })

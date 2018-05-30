@@ -8,8 +8,14 @@ import scala.util.Success
 
 class LizardSpec extends Specification {
 
-  val fizzBuzz = FileMetrics("codacy/metrics/Fizzbuzz.cs", Some(3), nrMethods = Some(1),lineComplexities = Set(LineComplexity(4,3)))
-  val helloWorld = FileMetrics("codacy/metrics/Hello.cs", Some(1), nrMethods = Some(1), lineComplexities = Set(LineComplexity(6, 1)))
+  val fizzBuzz = FileMetrics(
+    "codacy/metrics/Fizzbuzz.cs",
+    Some(3),
+    nrMethods = Some(1),
+    lineComplexities = Set(LineComplexity(4, 3)))
+
+  val helloWorld =
+    FileMetrics("codacy/metrics/Hello.cs", Some(1), nrMethods = Some(1), lineComplexities = Set(LineComplexity(6, 1)))
 
   val targetDir = "src/test/resources/"
 

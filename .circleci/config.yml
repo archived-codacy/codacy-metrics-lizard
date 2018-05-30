@@ -99,7 +99,7 @@ jobs:
       - run:
           name: Install the tool
           command: |
-            sudo python3 -m pip install -I -U --no-cache-dir lizard==`cat lizardVersion
+            sudo python3 -m pip install -I -U --no-cache-dir lizard==`cat lizardVersion`
       - run:
           name: Test
           command: ./scripts/test.sh

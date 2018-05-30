@@ -10,7 +10,7 @@ This is the docker engine we use at Codacy to have [Lizard](https://github.com/t
 You can create the docker by doing:
 
 ```bash
-sbt docker:publishLocal
+./scripts/publish.sh
 ```
 
 The docker is ran with the following command:
@@ -27,7 +27,7 @@ Before running the tests, you need to install Lizard. The tool [README](https://
 After that, you can run the tests:
 
 ```bash
-sbt test
+./scripts/test.sh
 ```
 
 ## What is Codacy
