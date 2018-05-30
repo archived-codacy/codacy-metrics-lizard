@@ -4,30 +4,29 @@ import java.io
 
 import codacy.docker.api.metrics.{FileMetrics, LineComplexity, MetricsTool}
 import codacy.docker.api.{MetricsConfiguration, Source}
-import com.codacy.api.dtos.Language
+import com.codacy.api.dtos.{Language, Languages}
 import com.codacy.docker.api.utils.CommandRunner
 
 import scala.util.{Failure, Properties, Success, Try}
-import scala.xml.{Node, XML}
+import scala.xml.{Elem, Node, XML}
 
 object Lizard extends MetricsTool {
 
   override def apply(source: Source.Directory,
-                     language: Option[Language], // Filter by language currently not supported
+                     languageOpt: Option[Language], // Filter by language currently not supported
                      files: Option[Set[Source.File]],
                      options: Map[MetricsConfiguration.Key, MetricsConfiguration.Value]): Try[List[FileMetrics]] = {
-    calculateComplexity(source.path, files)
+    languageOpt match {
+      case Some(language) if language != Languages.CSharp =>
+        Failure(new Exception(s"Lizard only supports C#. Provided language: $language"))
+      case _ =>
+        val raw = runTool(source, complexityCommand(files))
+        raw.flatMap(parseOutput)
+    }
   }
 
-  private def calculateComplexity(directory: String, files: Option[Set[Source.File]]): Try[List[FileMetrics]] = {
-    val raw = runTool(directory, complexityCommand(files))
-    raw.flatMap(parseOutput)
-  }
-
-  private def runTool(directory: String, command: List[String]): Try[Seq[String]] = {
-    val ioDirectoryOpt = new io.File(directory)
-
-    CommandRunner.exec(command, Option(ioDirectoryOpt)) match {
+  private def runTool(directory: Source.Directory, command: List[String]): Try[Seq[String]] = {
+    CommandRunner.exec(command, Option(new io.File(directory.path))) match {
       case Right(output) =>
         Success(output.stdout)
       case Left(error) =>
@@ -42,9 +41,9 @@ object Lizard extends MetricsTool {
   }
 
   private def parseOutput(out: Seq[String]): Try[List[FileMetrics]] = {
-    Try {
-      val xml = XML.loadString(out.mkString(Properties.lineSeparator))
+    val document = loadXml(out)
 
+    document.map { xml =>
       val complexityByFileMap = complexityByFile(xml)
 
       complexityByFileMap.map {
@@ -57,6 +56,16 @@ object Lizard extends MetricsTool {
             lineComplexities = linesComplexity,
             nrMethods = Option(linesComplexity.size)) // since each line is a method/function)
       }(collection.breakOut)
+    }
+  }
+
+  private def loadXml(out: Seq[String]): Try[Elem] = {
+    val xmlString = out.mkString(Properties.lineSeparator)
+    Try(XML.loadString(xmlString)).recoverWith {
+      case error =>
+        Failure(new Exception(s"""|Could not parse the following XML with the following error: ${error.getMessage}
+                                  |XML:
+                                  |$xmlString""".stripMargin))
     }
   }
 
