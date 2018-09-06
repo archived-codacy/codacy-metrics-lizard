@@ -1,7 +1,7 @@
 package codacy.metrics
 
-import codacy.docker.api.Source
-import codacy.docker.api.metrics.{FileMetrics, LineComplexity}
+import com.codacy.plugins.api.Source
+import com.codacy.plugins.api.metrics.{FileMetrics, LineComplexity}
 import org.specs2.mutable.Specification
 
 import scala.util.Success
@@ -24,7 +24,7 @@ class LizardSpec extends Specification {
       "all files within a directory" in {
         val expectedFileMetrics = List(fizzBuzz, helloWorld)
         val fileMetricsMap =
-          Lizard(source = Source.Directory(targetDir), languageOpt = None, files = None, options = Map.empty)
+          Lizard(source = Source.Directory(targetDir), language = None, files = None, options = Map.empty)
 
         fileMetricsMap should beLike {
           case Success(elems) => elems should containTheSameElementsAs(expectedFileMetrics)
@@ -36,7 +36,7 @@ class LizardSpec extends Specification {
 
         val fileMetricsMap = Lizard(
           source = Source.Directory(targetDir),
-          languageOpt = None,
+          language = None,
           files = Some(Set(Source.File(fizzBuzz.filename))),
           options = Map.empty)
 

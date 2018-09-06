@@ -2,10 +2,10 @@ package codacy.metrics
 
 import java.io
 
-import codacy.docker.api.metrics.{FileMetrics, LineComplexity, MetricsTool}
-import codacy.docker.api.{MetricsConfiguration, Source}
-import com.codacy.api.dtos.{Language, Languages}
 import com.codacy.docker.api.utils.CommandRunner
+import com.codacy.plugins.api.languages.{Language, Languages}
+import com.codacy.plugins.api.metrics.{FileMetrics, LineComplexity, MetricsTool}
+import com.codacy.plugins.api.{Options, Source}
 
 import scala.util.{Failure, Properties, Success, Try}
 import scala.xml.{Elem, Node, XML}
@@ -13,12 +13,12 @@ import scala.xml.{Elem, Node, XML}
 object Lizard extends MetricsTool {
 
   override def apply(source: Source.Directory,
-                     languageOpt: Option[Language], // Filter by language currently not supported
+                     language: Option[Language],
                      files: Option[Set[Source.File]],
-                     options: Map[MetricsConfiguration.Key, MetricsConfiguration.Value]): Try[List[FileMetrics]] = {
-    languageOpt match {
-      case Some(language) if language != Languages.CSharp =>
-        Failure(new Exception(s"Lizard only supports C#. Provided language: $language"))
+                     options: Map[Options.Key, Options.Value]): Try[List[FileMetrics]] = {
+    language match {
+      case Some(lang) if lang != Languages.CSharp =>
+        Failure(new Exception(s"Lizard only supports C#. Provided language: $lang"))
       case _ =>
         val raw = runTool(source, complexityCommand(files))
         raw.flatMap(parseOutput)
