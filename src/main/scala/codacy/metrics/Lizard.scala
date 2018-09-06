@@ -70,7 +70,7 @@ object Lizard extends MetricsTool {
   }
 
   private def complexityByFile(xml: Node): Map[String, Set[LineComplexity]] = {
-    val FileNameLineMatch = ".*? at [.]?/?(.*):(.*)".r
+    val FileNameLineMatch = """.*? at (?:\.\/)?(.*):(.*)""".r
 
     val complexitySeq = for {
       measure <- (xml \\ "measure").toList
